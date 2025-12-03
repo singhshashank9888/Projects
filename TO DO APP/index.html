@@ -1,36 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TO DO LIST</title>
     <style>
-        body{
-            background-color:rgb(55, 52, 52) ;
+        body {
+            background-color: rgb(55, 52, 52);
             color: white;
             font-family: sans-serif;
         }
+
+        ul {
+            list-style-type: none;
+        }
     </style>
-    
+
 </head>
-<body>  
 
-        <div class="heading"><h1>
+<body>
+
+    <div class="heading">
+        <h1>
             TO DO LIST
-        </h1></div>
-        <div class="taskSection">
-            <label for="task" class="taskCaption">Enter Your Task :</label>
-            <input type="text" placeholder="eg: buy milk" >
-            <button>+</button>
+        </h1>
+    </div>
+    <div class="taskSection">
+        <label for="task" class="taskCaption">Enter Your Task :</label>
+        <input id="task" type="text" placeholder="eg: buy milk">
+        <button>+</button>
 
-        </div>
-        <div class="toDoSection">
-            <ul></ul>
-        </div>
+    </div>
+    <div class="toDoSection">
+        <h5></h5>
+        <ul></ul>
+    </div>
+    <div class="completedTask">
+        <h5></h5>
+        <ul></ul>
+    </div>
 
-        <script>
-            const taskSection=document.querySelector(".taskSection");
+    <script>
+        const currentTask = document.querySelector(".taskSection input");
+
+        const btn = document.querySelector("button");
+        const list = document.querySelector(".toDoSection ul");
+        const listCompleted = document.querySelector(".completedTask ul");
+        const caption = document.querySelector(".toDoSection h5")
+        const caption2 = document.querySelector(".completedTask h5")
+
+        caption.textContent = "NO TASK DEFINED";
+        currentTask.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                btn.click();
+            }
+        });
+        const taskArray = [];
+        btn.addEventListener("click", () => {
+            if (currentTask.value.trim() === "") return;
+            caption.textContent = "TO DO";
+            const Task = currentTask.value;
+            taskArray.push(Task);
             
-        </script>
+            const listItem = document.createElement("li");
+            // const span=document.createElement("span");
+            const delBtn = document.createElement("button");
+
+            delBtn.textContent = "X";
+            // span.textContent = Task;
+            listItem.textContent = Task;
+            // listItem.appendChild(span);
+            listItem.appendChild(delBtn);
+            list.appendChild(listItem);
+
+            currentTask.value = "";
+
+            delBtn.addEventListener("click", () => {
+                list.removeChild(listItem);
+            });
+
+        });
+        list.addEventListener("click", (e) => {
+
+            const newListItemContent = e.target.textContent;
+            const newListItem = document.createElement("li");
+            list.removeChild(e.target);
+            newListItem.textContent = newListItemContent;
+            caption2.textContent = "COMPLETED TASK";
+
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "X";
+            newListItem.appendChild(delBtn);
+            listCompleted.appendChild(newListItem);
+            delBtn.addEventListener("click", () => {
+                listCompleted.removeChild(newListItem);
+            });
+        })
+        currentTask.focus();
+    </script>
 </body>
+
 </html>

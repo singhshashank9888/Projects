@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>array input</title>
     <style>
         body {
             background-color: rgb(51, 30, 30);
@@ -19,19 +19,36 @@
     <h1></h1>
     <input type="text">
     <button>click me</button>
-    
+
     <script>
         const heading = document.querySelector("h1");
         const input = document.querySelector("input");
         const btn = document.querySelector("button");
-        
+
         input.focus();
         const savedNameJSON = localStorage.getItem("username");
         let userInputArray = [];
-        heading.textContent = Hi;
+        heading.textContent = ` Hi`;
         if (savedNameJSON) {
-            userInputArray = JSON.parse(savedNameJSON);
-            heading.textContent = `Welcome Back ${userInputArray.length}`;
+            try {
+
+                const parsed = JSON.parse(savedNameJSON);
+                if (Array.isArray(parsed)) {
+
+                    heading.textContent = `Welcome Back No of users ${userInputArray.length}`;
+                    userInputArray = parsed;
+                } else {
+                    userInputArray = [parsed];
+                }
+            }
+            catch (e) {
+                userInputArray = [savedNameJSON];
+                heading.textContent = `Welcome Back (1)`;
+
+            }
+        }
+        else {
+            heading.textContent = "Hi";
         }
         input.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
@@ -39,10 +56,14 @@
             }
         })
         btn.addEventListener("click", () => {
-            const inputName = input.value;
+            const inputName = input.value.trim();
+            if (inputName === "") return;
+
             userInputArray.push(inputName);
-            
+
             localStorage.setItem("username", JSON.stringify(userInputArray));
+            heading.textContent = `Welcome Back ${userInputArray.length}`;
+
             input.value = '';
             input.focus();
         })

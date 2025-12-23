@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TO DO LIST</title>
+<style>
+    /* ---------- GLOBAL ---------- */
+body {
+    background-color: #2c2b2b;
+    color: #f5f5f5;
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Remove default bullet */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* ---------- HEADER ---------- */
+.header {
+    background-color: #1e1e1e;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    border-bottom: 1px solid #444;
+}
+
+.header label {
+    margin: auto 0;
+    font-weight: 600;
+}
+
+.header input {
+    padding: 14px 20px;
+    width: 240px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    background: #ffffff;
+    color: #333;
+    font-size: 15px;
+}
+
+.header button {
+    padding: 14px 25px;
+    border-radius: 50px;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.header button:hover {
+    background: #2563eb;
+}
+
+/* ---------- SECTIONS ---------- */
+.section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.section h5 {
+    margin: 10px 0 5px;
+    color: #ccc;
+    letter-spacing: 1px;
+}
+
+/* ---------- TASK ITEM ---------- */
+.toDoSection ul li,
+.completedTask ul li {
+    width: 500px;
+    padding: 15px 20px;
+
+    background-color: #3a3a3a;
+    border: 1px solid #4c4c4c;
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin: 10px 0;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.toDoSection ul li:hover,
+.completedTask ul li:hover {
+    background-color: #4b4b4b;
+    transform: translateY(-3px);
+    cursor: pointer;
+}
+
+/* ---------- DELETE BUTTON ---------- */
+.deleteButton {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.deleteButton:hover {
+    background: #dc2626;
+    transform: scale(1.05);
+}
+
+</style>
+    <!-- <style>
+        body {
+
+            background-color: rgb(55, 52, 52);
+
+            color: white;
+
+            font-family: sans-serif;
+            padding: 0px;
+            margin: 0px;
+
+        }
+
+
+
+        ul {
+
+            list-style-type: none;
+
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            background-color: rgb(34, 33, 33);
+            border: 2px solid gray;
+            padding: 20px;
+            border-radius: 0px;
+            font-size: 20px;
+        }
+
+        .header input {
+            padding: 20px;
+            margin: 5px;
+            background-color: azure;
+            box-shadow: 1px 1px 1px black;
+            border-radius: 55px;
+        }
+
+        .header button {
+            box-sizing: border-box;
+            margin: 10px;
+            background-color: gray;
+            color: white;
+            border-radius: 60px;
+            transition: box-shadow boder-radius 10s ease-in-out;
+
+        }
+
+        .header button:hover {
+            box-sizing: border-box;
+            margin: 5px;
+            box-shadow: 1px 1px rgb(1, 1, 1);
+            cursor: pointer;
+        }
+
+        .header label {
+            margin: auto 0;
+        }
+
+        .section {
+            display: flex;
+            flex-flow: column;
+
+            align-items: center;
+        }
+
+        .toDoSection ul li , .completedTask ul li{
+            display: flex;
+            box-sizing: border-box;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgb(93, 87, 87);
+            margin: 10px;
+            padding:  10px 30px;
+            width: 500px;
+            
+        }
+          .toDoSection ul li:hover , .completedTask ul li:hover{
+
+              background-color: gray;
+              cursor: pointer;
+            }
+
+        .deleteButton{
+            
+                padding: 30px;
+        }
+        .deleteButton:hover{
+                cursor:pointer;
+                background-color: rgb(154, 61, 61);
+                transition: ease-in;
+                padding: 30px;
+        }
+    </style> -->
+
+</head>
+
+<body>
+
+
+    <div class="header">
+        <label for="task">Enter Your Task :</label>
+        <input id="task" type="text" placeholder="eg: buy milk">
+        <button>+</button>
+    </div>
+    <div class="section">
+
+        <div class="toDoSection">
+            <h5></h5>
+            <ul></ul>
+        </div>
+
+        <div class="completedTask">
+
+            <h5></h5>
+
+            <ul></ul>
+
+        </div>
+    </div>
+
+
+
+    <script>
+
+        const input = document.querySelector("input");
+
+
+
+        const btn = document.querySelector("button");
+
+        const toDoList = document.querySelector(".toDoSection ul");
+
+        const completedList = document.querySelector(".completedTask ul");
+
+        const heading1 = document.querySelector(".toDoSection h5")
+
+        const heading2 = document.querySelector(".completedTask h5")
+
+        function saveToDo() {
+            localStorage.setItem("toDoArray", JSON.stringify(toDoArray));
+        }
+        function renderToDo() {
+            toDoList.innerHTML = "";
+            for (let i = 0; i < toDoArray.length; i++) {
+                const li = toDoArray[i];
+                const list = document.createElement("li");
+                list.textContent = li;
+                const delBtn = document.createElement("button");
+                delBtn.setAttribute("class", "deleteButton");
+                delBtn.textContent = "X";
+                list.appendChild(delBtn);
+                toDoList.appendChild(list);
+
+
+            }
+            heading1.textContent = "TO DO LIST";
+        }
+        function saveCompleted() {
+            localStorage.setItem("completedArray", JSON.stringify(completedArray));
+        }
+        function renderCompleted() {
+
+            completedList.innerHTML = "";
+            for (let i = 0; i < completedArray.length; i++) {
+                const li = completedArray[i];
+                const list = document.createElement("li");
+                list.textContent = li;
+                const delBtn = document.createElement("button");
+                delBtn.setAttribute("class", "deleteButton");
+                delBtn.textContent = "X";
+                list.appendChild(delBtn);
+                completedList.appendChild(list);
+
+            }
+
+
+        }
+        heading2.textContent = "Completed List";
+
+        let toDoArray = [];
+        let completedArray = [];
+        let savedToDoArray = localStorage.getItem("toDoArray");
+        if (savedToDoArray) {
+            toDoArray = JSON.parse(savedToDoArray);
+            renderToDo();
+        }
+
+        let savedCompletedArray = localStorage.getItem("completedArray");
+        if (savedCompletedArray) {
+
+            completedArray = JSON.parse(savedCompletedArray);
+            renderCompleted();
+        }
+
+
+        heading1.textContent = "NO TASK DEFINED";
+
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                btn.click();
+            }
+        });
+
+
+        btn.addEventListener("click", () => {
+
+            const inputValue = input.value;
+            if (inputValue.trim() === "") return;
+
+            heading1.textContent = "TO DO LIST";
+            toDoArray.push(inputValue);
+            const list = document.createElement("li");
+            list.textContent = inputValue;
+            toDoList.appendChild(list);
+
+            renderToDo();
+            saveToDo();
+            input.value = "";
+            input.focus();
+        });
+
+        toDoList.addEventListener("click", (e) => {
+
+            const li = e.target.parentElement;
+
+            const listArray = Array.from(toDoList.children);
+            const index = listArray.indexOf(li);
+
+            if (e.target.tagName === "BUTTON") {
+                toDoArray.splice(index, 1);
+                saveToDo();
+                toDoList.removeChild(li);
+            }
+            else if (e.target.tagName === "LI") {
+                const value = e.target.firstChild.textContent;
+
+                completedArray.push(value);
+
+                const index = toDoArray.indexOf(value);
+                console.log(index);
+                toDoArray.splice(index, 1);
+                saveToDo();
+                renderToDo();
+                saveCompleted();
+                renderCompleted();
+            }
+        })
+
+        completedList.addEventListener("click", (e) => {
+            if (e.target.tagName === "BUTTON") {
+                const li = e.target.parentElement;
+
+                const listArray = Array.from(completedList.children);
+                const index = listArray.indexOf(li);
+                completedArray.splice(index, 1);
+                saveCompleted();
+                completedList.removeChild(li);
+            }
+        })
+
+
+    </script>
+
+</body>
+
+</html>

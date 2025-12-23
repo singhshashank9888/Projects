@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do list Practice</title>
+    <style>
+        body {
+            background-color: rgb(41, 44, 44);
+            color: white;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>To Do App</h1>
+    <div class="inputSection">
+
+        <label for="taskInput">Enter A task : </label>
+        <input id="taskInput" type="text" placeholder="eg:buyMilk">
+        <button>+</button>
+    </div>
+
+    <div class="toDoSection">
+        <h4></h4>
+        <ul></ul>
+    </div>
+    <div class="completedSection">
+        <h4></h4>
+        <ul></ul>
+    </div>
+
+    <script>
+        const input = document.querySelector(".inputSection input");
+        const btn = document.querySelector(".inputSection button");
+
+        const heading1 = document.querySelector(".toDoSection h4");
+        const list1 = document.querySelector(".toDoSection ul");
+
+        const heading2 = document.querySelector(".completedSection h4");
+        const list2 = document.querySelector(".completedSection ul");
+
+        let toDoTaskArray = [];
+        let completedTaskArray = [];
+
+        const savedToDoArray = localStorage.getItem("toDoArray");
+        if (savedToDoArray) {
+            toDoTaskArray = JSON.parse(savedToDoArray);
+            heading1.textContent = `To Do Section`;
+            for (let i = 0; i < toDoTaskArray.length; i++) {
+
+                const listItem1 = document.createElement("li");
+                listItem1.textContent = toDoTaskArray[i];
+
+                const deleteItem1 = document.createElement("button");
+                deleteItem1.textContent = `x`;
+                listItem1.appendChild(deleteItem1);
+                list1.appendChild(listItem1);
+                list1.addEventListener("click", (e) => {
+                    if (e.target.tagName === "BUTTON") {
+                        const li = e.target.parentElement; //the <li>
+                            const items = Array.from(list1.children);
+                            const index = items.indexOf(li);
+                            toDoTaskArray.splice(index, 1);
+                            localStorage.setItem("toDoArray", JSON.stringify(toDoTaskArray));
+                        }
+                        list1.removeChild(listItem1);
+                })
+            }
+
+            input.value = "";
+        }
+        // const savedCompletedArray = localStorage.getItem("completedArray");
+        // if (savedCompletedArray) {
+        //     completedTaskArray = JSON.parse(savedCompletedArray);
+        //     heading2.textContent = `Completed Section`;
+
+        //     for (let i = 0; i < completedTaskArray.length; i++) {
+
+        //         const listItem2 = document.createElement("li");
+        //         listItem2.textContent = completedTaskArray[i];
+
+        //         const deleteItem2 = document.createElement("button");
+        //         deleteItem2.textContent = `x`;
+        //         listItem2.appendChild(deleteItem2);
+        //         list2.appendChild(listItem2);
+        //         deleteItem2.addEventListener("click", () => {
+        //             list1.removeChild(listItem2);
+        //             completedTaskArray.splice(completedTaskArray.indexOf(`${e.target.value}`, 1));
+        //             localStorage.setItem("toDoArray", JSON.stringify(completedTaskArray));
+        //         })
+        //     }
+
+
+
+        // }
+
+
+        input.focus();
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") btn.click();
+        });
+
+        btn.addEventListener("click", () => {
+            const inputValue = input.value;
+
+            toDoTaskArray.push(inputValue);
+            localStorage.setItem("toDoArray", JSON.stringify(toDoTaskArray));
+            if (inputValue.trim() === "") return;
+            heading1.textContent = `To Do Section`;
+            const listItem1 = document.createElement("li");
+            listItem1.textContent = inputValue;
+
+            const deleteItem1 = document.createElement("button");
+            deleteItem1.textContent = `x`;
+            listItem1.appendChild(deleteItem1);
+            list1.appendChild(listItem1);
+
+
+            input.value = "";
+        })
+
+        list1.addEventListener("click", (e) => {
+            // heading2.textContent = `Completed Section`;
+
+            // const inputValue = e.target.textContent;
+
+            // // list1.removeChild(e.target);
+            // toDoTaskArray.splice(toDoTaskArray.indexOf(`${e.target.textContent}`), 1);
+            // localStorage.setItem("toDoArray", JSON.stringify(toDoTaskArray));
+
+            // completedTaskArray.push(inputValue);
+            // localStorage.setItem("completedArray", JSON.stringify(completedTaskArray));
+
+
+
+
+            // const listItem2 = document.createElement("li");
+            // listItem2.textContent = inputValue;
+            // list2.appendChild(listItem2);
+
+            // const deleteItem2 = document.createElement("button");
+            // deleteItem2.textContent = `x`;
+            // listItem2.appendChild(deleteItem2);
+            // list2.appendChild(listItem2);
+            // deleteItem2.addEventListener("click", (e) => {
+            //     list2.removeChild(listItem2);
+
+            // })
+        })
+        input.focus();
+    </script>
+</body>
+
+</html>

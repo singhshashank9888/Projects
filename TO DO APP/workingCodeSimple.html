@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Todo with LocalStorage</title>
+<style>
+    body{
+        background:#222;
+        color:white;
+        font-family:sans-serif;
+    }
+    li{
+        margin:6px 0;
+        cursor:pointer;
+    }
+    .completed{
+        text-decoration: line-through;
+        color:#aaa;
+    }
+    button{
+        margin-left:10px;
+        cursor:pointer;
+    }
+</style>
+</head>
+
+<body>
+<h1>Todo List</h1>
+
+<input id="todo-input" type="text" placeholder="Task">
+<button id="add-btn">Add</button>
+
+<ul id="todo-list"></ul>
+
+<script>
+    const input = document.getElementById("todo-input");
+    const list = document.getElementById("todo-list");
+
+    // MAIN ARRAY
+    let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+    // SAVE TO LOCAL STORAGE
+    function save(){
+        localStorage.setItem("todos", JSON.stringify(todos));
+    }
+
+    // RENDER UI
+    function render(){
+        list.innerHTML = "";
+        todos.forEach((todo, index)=>{
+            const li = document.createElement("li");
+
+            // if completed, add class
+            if(todo.completed) li.classList.add("completed");
+
+            li.textContent = todo.text;
+
+            // click toggles complete
+            li.addEventListener("click",()=>{
+                todos[index].completed = !todos[index].completed;
+                save();
+                render();
+            });
+
+            // delete button
+            const del = document.createElement("button");
+            del.textContent = "X";
+            del.addEventListener("click",(event)=>{
+                event.stopPropagation();  // stop li click
+                todos.splice(index,1);
+                save();
+                render();
+            });
+
+            li.appendChild(del);
+            list.appendChild(li);
+        });
+    }
+
+    // ADD NEW TODO
+     input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") document.getElementById("add-btn").click();
+        });
+    document.getElementById("add-btn").addEventListener("click",()=>{
+        const text = input.value.trim();
+        if(text === "") return;
+
+        todos.push({text, completed:false});
+        save();
+        render();
+        input.value = "";
+    });
+
+    // initial load
+    render();
+</script>
+</body>
+</html>
